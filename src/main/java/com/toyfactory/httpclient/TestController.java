@@ -21,6 +21,7 @@ import java.util.concurrent.ForkJoinPool;
 public class TestController {
 
     private final RestTemplate simpleRestTemplate;
+    private final RestTemplate restTemplateWithPool;
 
     private final AsyncService asyncService;
 
@@ -34,6 +35,16 @@ public class TestController {
 
         log.debug("testSingle response:{}", response.toString());
 
+        return response.getBody();
+    }
+
+    @GetMapping("/pool/{count}")
+    public String testPool(@PathVariable int count) {
+        String url = "http://www.test99.co.kr:8081/";
+
+        ResponseEntity<String> response = simpleRestTemplate.getForEntity(url, String.class);
+
+        log.debug("testPool[{}] response:{}", count, response.toString());
         return response.getBody();
     }
 
