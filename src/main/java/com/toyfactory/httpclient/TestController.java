@@ -2,6 +2,8 @@ package com.toyfactory.httpclient;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,13 +40,31 @@ public class TestController {
         return response.getBody();
     }
 
-    @GetMapping("/pool/{count}")
-    public String testPool(@PathVariable int count) {
-        String url = "http://www.test99.co.kr:8081/";
+
+    @GetMapping("/single/hello")
+    public String testHello() {
+        log.debug("testHello start");
+
+        String url = "http://localhost:8080/hello/";
 
         ResponseEntity<String> response = simpleRestTemplate.getForEntity(url, String.class);
 
-        log.debug("testPool[{}] response:{}", count, response.toString());
+        log.debug("testHello response:{}", response.toString());
+
+        return response.getBody();
+    }
+
+    @GetMapping("/pool/{count}")
+    public String testPool(@PathVariable int count) {
+//        String url = "http://www.test99.co.kr:8081/";
+        String url = "http://localhost:8080/hello";
+//        ResponseEntity<String> response = restTemplateWithPool.getForEntity(url, String.class);
+        HttpEntity<String> response = restTemplateWithPool.exchange(url, HttpMethod.GET, null, String.class);
+
+        log.debug("testPool[{}] response body:{}", count, response.getBody());
+        var headers = response.getHeaders();
+        log.debug("testPool[{}] response header:{}", count, headers.toString());
+
         return response.getBody();
     }
 

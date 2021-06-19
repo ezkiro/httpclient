@@ -10,6 +10,8 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.concurrent.TimeUnit;
+
 @Configuration
 public class RestTemplateConfig {
 
@@ -53,6 +55,7 @@ public class RestTemplateConfig {
                 .setDefaultRequestConfig(config)
                 .setMaxConnPerRoute(60)
                 .setMaxConnTotal(100)
+                .setConnectionTimeToLive(10, TimeUnit.SECONDS)
                 .build();
 
         return new HttpComponentsClientHttpRequestFactory(client);
